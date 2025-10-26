@@ -11,6 +11,11 @@ public class Main {
             System.out.println("Graph " + (i + 1) + ": " + graph.getVertexCount() +
                     " districts, " + graph.getEdgeCount() + " potential roads");
 
+            // Визуализируем оригинальный граф (только для маленьких графов)
+            if (graph.getVertexCount() <= 10) {
+                GraphVisualizer.visualizeOriginalGraph(graph);
+            }
+
             // Kruskal
             KruskalMST kruskal = new KruskalMST(graph);
             kruskal.run();
@@ -27,16 +32,17 @@ public class Main {
                     ", Time: " + prim.getExecutionTime() + "ms, " +
                     "Operations: " + prim.getOperationsCount());
 
-            // MST edges (show first 5 for large graphs)
-            System.out.print("MST Edges: ");
-            List<Edge> edgesToShow = kruskal.getMstEdges();
-            int showCount = Math.min(5, edgesToShow.size());
-            for (int j = 0; j < showCount; j++) {
-                System.out.print(edgesToShow.get(j) + " ");
+            if (graph.getVertexCount() <= 300) {
+                GraphVisualizer.visualizeMST(graph, kruskal.getMstEdges(), "Kruskal");
+                GraphVisualizer.visualizeMST(graph, prim.getMstEdges(), "Prim");
             }
-            if (edgesToShow.size() > 5) System.out.print("...");
 
-            System.out.println("\n" + "=".repeat(50));
+            System.out.println("=".repeat(50));
+
+            // Пауза между графами для визуализации
+            if (graph.getVertexCount() <= 10) {
+                try { Thread.sleep(2000); } catch (InterruptedException e) {}
+            }
         }
     }
 }
